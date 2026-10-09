@@ -1,5 +1,5 @@
 // Content script entry: reader toggle, translation wiring and page messaging.
-import { extractArticle } from "./extract.js";
+import { extractArticle, isProbablyReaderable } from "./extract.js";
 import { mountReader } from "./overlay.js";
 import { collectSegments } from "../translate/chunker.js";
 import { translateArticle } from "../translate/pipeline.js";
@@ -12,7 +12,7 @@ async function openReader() {
   if (reader) return;
   const article = extractArticle(document);
   if (!article) {
-    showToast("Reader Mode AI: no article found on this page.");
+    showToast(t("noArticle") || "Reader Mode AI: no article found on this page.");
     return;
   }
   const settings = await getSettings();
@@ -49,9 +49,20 @@ async function translateTexts(texts, targetLang) {
   return response.translations;
 }
 
+// Auto-detection: a readable page lights up the toolbar badge.
+function announceReadability() {
+  const readable = isProbablyReaderable(document);
+  document.documentElement.dataset.readerModeAiReady = String(readable);
+  chrome.runtime.sendMessage({ type: "set-badge", readerable: readable }).catch(() => {});
+}
+
 chrome.runtime.onMessage.addListener((message) => {
   if (message?.type === "toggle-reader") toggleReader();
 });
+
+function t(key) {
+  return globalThis.chrome?.i18n?.getMessage?.(key) || "";
+}
 
 function showToast(text) {
   const toast = document.createElement("div");
@@ -62,3 +73,5 @@ function showToast(text) {
   document.documentElement.appendChild(toast);
   setTimeout(() => toast.remove(), 2500);
 }
+
+announceReadability();

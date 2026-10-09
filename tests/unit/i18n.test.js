@@ -11,17 +11,17 @@ function loadJSON(relativePath) {
 
 describe("localization", () => {
   const en = loadJSON("src/_locales/en/messages.json");
-  const it = loadJSON("src/_locales/it/messages.json");
+  const itMessages = loadJSON("src/_locales/it/messages.json");
 
   it("defines the same keys in every locale", () => {
-    expect(Object.keys(en).sort()).toEqual(Object.keys(it).sort());
+    expect(Object.keys(en).sort()).toEqual(Object.keys(itMessages).sort());
   });
 
   it("has a non-empty message for every key", () => {
     for (const [key, entry] of Object.entries(en)) {
       expect(typeof entry.message, `en/${key}`).toBe("string");
       expect(entry.message.length, `en/${key}`).toBeGreaterThan(0);
-      expect(it[key].message.length, `it/${key}`).toBeGreaterThan(0);
+      expect(itMessages[key].message.length, `it/${key}`).toBeGreaterThan(0);
     }
   });
 
@@ -31,7 +31,7 @@ describe("localization", () => {
     expect(referenced.length).toBeGreaterThan(0);
     for (const key of referenced) {
       expect(en[key], `missing en/${key}`).toBeTruthy();
-      expect(it[key], `missing it/${key}`).toBeTruthy();
+      expect(itMessages[key], `missing it/${key}`).toBeTruthy();
     }
   });
 });

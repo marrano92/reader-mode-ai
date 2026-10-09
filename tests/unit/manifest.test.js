@@ -14,7 +14,8 @@ const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
 describe("manifest", () => {
   it("is a valid MV3 manifest", () => {
     expect(manifest.manifest_version).toBe(3);
-    expect(manifest.name).toBe("Reader Mode AI");
+    expect(manifest.name).toBe("__MSG_extName__");
+    expect(manifest.default_locale).toBe("en");
     expect(manifest.version).toMatch(/^\d+\.\d+\.\d+$/);
   });
 

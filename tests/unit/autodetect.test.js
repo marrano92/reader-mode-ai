@@ -20,7 +20,8 @@ beforeEach(() => {
 
 describe("content script auto-detection", () => {
   it("marks article pages as readable and notifies the background", async () => {
-    domOf(`<body><article><h1>Title</h1>${"<p>Long prose paragraph with plenty of text. ".repeat(8)}</article></body>`);
+    const longParagraph = "Word, word, word, and more words that make this paragraph long enough to score as readable. ".repeat(4);
+    domOf(`<body><article><h1>Title</h1>${`<p>${longParagraph}</p>`.repeat(5)}</article></body>`);
     await loadContentScript();
     expect(document.documentElement.dataset.readerModeAiReady).toBe("true");
     expect(chrome.runtime.sendMessage).toHaveBeenCalledWith({ type: "set-badge", readerable: true });

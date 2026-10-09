@@ -13,6 +13,11 @@ const keyInput = document.querySelector("[data-role='api-key']");
 const endpointInput = document.querySelector("[data-role='endpoint-url']");
 const status = document.querySelector("[data-role='status']");
 
+const t = (key) => chrome.i18n.getMessage(key) || key;
+for (const el of document.querySelectorAll("[data-i18n]")) {
+  el.textContent = t(el.dataset.i18n);
+}
+
 for (const code of TARGET_LANGUAGES) {
   const option = document.createElement("option");
   option.value = code;
@@ -30,18 +35,18 @@ async function init() {
 
 langSelect.addEventListener("change", async () => {
   await updateSettings({ targetLang: langSelect.value });
-  status.textContent = "Saved.";
+  status.textContent = t("optionsSaved");
 });
 
 keyInput.addEventListener("change", async () => {
   await setSecret({ deeplKey: keyInput.value });
-  status.textContent = "Saved.";
+  status.textContent = t("optionsSaved");
 });
 
 endpointInput.addEventListener("change", async () => {
   const secret = await setSecret({ endpointUrl: endpointInput.value });
   endpointInput.value = secret.endpointUrl;
-  status.textContent = "Saved.";
+  status.textContent = t("optionsSaved");
 });
 
 init();
