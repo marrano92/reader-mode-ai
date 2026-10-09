@@ -1,0 +1,9 @@
+Mozilla Readability
+-------------------
+This extension uses @mozilla/readability (https://github.com/mozilla/readability),
+licensed under the Mozilla Public License 2.0 (MPL-2.0):
+
+  https://github.com/mozilla/readability/blob/main/LICENSE
+
+The library is consumed unmodified through its npm package. If a covered file is
+modified, MPL-2.0 requires the modified version to remain open source.
