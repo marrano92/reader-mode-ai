@@ -4,6 +4,10 @@
   "version": "0.1.0",
   "description": "Safari-style reader mode with DeepL AI translation.",
   "permissions": ["storage"],
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
   "action": {
     "default_title": "Toggle reader mode"
   },

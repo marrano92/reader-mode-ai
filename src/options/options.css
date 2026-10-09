@@ -1,0 +1,40 @@
+:root {
+  color-scheme: light dark;
+  font-family: -apple-system, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
+}
+
+body {
+  margin: 0 auto;
+  max-width: 34em;
+  padding: 2em 1.25em;
+  line-height: 1.5;
+}
+
+h1 { font-size: 1.5em; margin-bottom: 1em; }
+h2 { font-size: 1.1em; margin: 1.5em 0 0.5em; }
+
+section {
+  border: 1px solid rgba(128, 128, 128, 0.35);
+  border-radius: 8px;
+  padding: 1em;
+  margin-bottom: 1em;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.35em;
+  font-size: 0.9em;
+}
+
+input, select, button {
+  font: inherit;
+  padding: 0.35em 0.6em;
+  border-radius: 6px;
+  border: 1px solid rgba(128, 128, 128, 0.45);
+}
+
+input[type="text"], input[type="password"] { width: 100%; }
+
+button { cursor: pointer; }
+
+[data-role="status"] { color: #2c7a3f; min-height: 1.2em; }

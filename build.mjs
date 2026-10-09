@@ -19,6 +19,19 @@ entries.set(manifest.background.service_worker, manifest.background.service_work
 for (const cs of manifest.content_scripts ?? []) {
   for (const file of cs.js ?? []) entries.set(file, file);
 }
+for (const file of ["options/options.js"]) {
+  if (existsSync(path.join(srcDir, file))) entries.set(file, file);
+}
+
+// Static assets first, so bundled entry points can overwrite their sources.
+await mkdir(outDir, { recursive: true });
+await copyFile(path.join(srcDir, "manifest.json"), path.join(outDir, "manifest.json"));
+for (const dir of ["_locales", "options"]) {
+  const from = path.join(srcDir, dir);
+  if (existsSync(from)) {
+    await cp(from, path.join(outDir, dir), { recursive: true });
+  }
+}
 
 for (const [entry, out] of entries) {
   await build({
@@ -29,16 +42,6 @@ for (const [entry, out] of entries) {
     target: "chrome110",
     logLevel: "warning",
   });
-}
-
-// Static assets: the manifest plus optional locale/options resources.
-await mkdir(outDir, { recursive: true });
-await copyFile(path.join(srcDir, "manifest.json"), path.join(outDir, "manifest.json"));
-for (const dir of ["_locales", "options"]) {
-  const from = path.join(srcDir, dir);
-  if (existsSync(from)) {
-    await cp(from, path.join(outDir, dir), { recursive: true });
-  }
 }
 
 console.log(`Build complete: ${outDir}`);
