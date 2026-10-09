@@ -1,7 +1,10 @@
-// Content script entry: reader toggle and page messaging.
+// Content script entry: reader toggle, translation wiring and page messaging.
 import { extractArticle } from "./extract.js";
 import { mountReader } from "./overlay.js";
+import { collectSegments } from "../translate/chunker.js";
+import { translateArticle } from "../translate/pipeline.js";
 import { getSettings, updateSettings } from "../shared/settings.js";
+import { TranslationError } from "../translators/base.js";
 
 let reader = null;
 
@@ -19,7 +22,10 @@ async function openReader() {
       reader = null;
     },
     onSettingChange: (patch) => updateSettings(patch),
+    onTranslate: (targetLang, { root, signal, onProgress }) =>
+      translateArticle({ root, targetLang, signal, onProgress, client: translateTexts }),
   });
+  reader.setCharCount(countTranslatableChars(reader.getArticleRoot()));
 }
 
 function closeReader() {
@@ -30,6 +36,17 @@ function closeReader() {
 function toggleReader() {
   if (reader) closeReader();
   else openReader();
+}
+
+// The button label shows the cost in characters before translating.
+function countTranslatableChars(root) {
+  return collectSegments(root).reduce((n, segment) => n + segment.html.length, 0);
+}
+
+async function translateTexts(texts, targetLang) {
+  const response = await chrome.runtime.sendMessage({ type: "translate", texts, targetLang });
+  if (!response?.ok) throw new TranslationError(response?.error ?? "translation_failed");
+  return response.translations;
 }
 
 chrome.runtime.onMessage.addListener((message) => {
