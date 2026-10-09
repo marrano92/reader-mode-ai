@@ -41,6 +41,11 @@ describe("collectSegments", () => {
     expect(segments.map((s) => s.html)).toEqual(["<span>kept</span>"]);
   });
 
+  it("collects segments when the root is itself a block (the reader title)", () => {
+    const h1 = makeRoot("<h1>The Title</h1>").querySelector("h1");
+    expect(collectSegments(h1).map((s) => s.html)).toEqual(["The Title"]);
+  });
+
   it("escapes text nodes so markup survives the round trip", () => {
     const root = makeRoot(`<p>a &lt; b &amp; c</p>`);
     const segments = collectSegments(root);

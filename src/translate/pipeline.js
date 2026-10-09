@@ -7,6 +7,7 @@ import { collectSegments, replaceSegmentHtml, splitIntoChunks } from "./chunker.
 const DEFAULT_CHUNK_CHARS = 2000;
 
 export async function translateArticle({
+  roots,
   root,
   targetLang,
   client,
@@ -14,7 +15,8 @@ export async function translateArticle({
   signal,
   chunkChars = DEFAULT_CHUNK_CHARS,
 }) {
-  const segments = collectSegments(root);
+  // Title and body are translated together: both are translatable roots.
+  const segments = (roots ?? (root ? [root] : [])).flatMap((entry) => collectSegments(entry));
   const totalChars = segments.reduce((n, segment) => n + segment.html.length, 0);
   const stats = { segments: segments.length, requests: 0, chars: totalChars };
   if (!totalChars) return stats;

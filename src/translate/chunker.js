@@ -16,7 +16,10 @@ const BOUNDARY_SELECTOR = `${MEDIA_SELECTOR}, ${BLOCK_SELECTOR}`;
 // inline nodes that contains no media and no nested block.
 export function collectSegments(root) {
   const segments = [];
-  for (const block of root.querySelectorAll(BLOCK_SELECTOR)) {
+  const blocks = [...root.querySelectorAll(BLOCK_SELECTOR)];
+  // The root itself can be a block (e.g. the reader title heading).
+  if (root.nodeType === 1 && root.matches?.(BLOCK_SELECTOR)) blocks.unshift(root);
+  for (const block of blocks) {
     let run = [];
     const flush = () => {
       if (run.length) segments.push({ nodes: run, html: run.map(serialize).join("") });

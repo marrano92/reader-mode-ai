@@ -73,7 +73,7 @@ export function mountReader(doc, article, options = {}) {
     toolbar.setProgress(0);
     try {
       await onTranslate(targetLang, {
-        root: contentEl,
+        roots: [titleEl, contentEl],
         signal: abortController.signal,
         onProgress: (fraction) => toolbar.setProgress(fraction),
       });
@@ -90,6 +90,7 @@ export function mountReader(doc, article, options = {}) {
   const handle = {
     el: host,
     getArticleRoot: () => contentEl,
+    getTranslatableRoots: () => [titleEl, contentEl],
     setCharCount: (count) => toolbar.setCharCount(count),
     setSettings(next = {}) {
       Object.assign(current, next);

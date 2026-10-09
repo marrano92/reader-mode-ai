@@ -31,6 +31,7 @@ test("translates in place keeping media, then serves the translation from cache"
   await expect(overlay.locator(".reader__content video")).toHaveCount(1);
   await expect(overlay.locator(".reader__content iframe")).toHaveCount(1);
   await expect(overlay.locator(".reader__content figcaption")).toContainText("TR:");
+  await expect(overlay.locator("h1")).toContainText("TR:");
   expect(servers.stats.translateCalls).toBeGreaterThan(0);
 
   // Re-activating translation on the same page hits the cache: zero API calls.

@@ -22,10 +22,10 @@ async function openReader() {
       reader = null;
     },
     onSettingChange: (patch) => updateSettings(patch),
-    onTranslate: (targetLang, { root, signal, onProgress }) =>
-      translateArticle({ root, targetLang, signal, onProgress, client: translateTexts }),
+    onTranslate: (targetLang, { roots, signal, onProgress }) =>
+      translateArticle({ roots, targetLang, signal, onProgress, client: translateTexts }),
   });
-  reader.setCharCount(countTranslatableChars(reader.getArticleRoot()));
+  reader.setCharCount(countTranslatableChars(reader.getTranslatableRoots()));
 }
 
 function closeReader() {
@@ -39,8 +39,10 @@ function toggleReader() {
 }
 
 // The button label shows the cost in characters before translating.
-function countTranslatableChars(root) {
-  return collectSegments(root).reduce((n, segment) => n + segment.html.length, 0);
+function countTranslatableChars(roots) {
+  return roots
+    .flatMap((root) => collectSegments(root))
+    .reduce((n, segment) => n + segment.html.length, 0);
 }
 
 async function translateTexts(texts, targetLang) {

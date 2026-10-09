@@ -44,6 +44,17 @@ describe("translateArticle", () => {
     expect(progress.at(-1)).toBe(1);
   });
 
+  it("translates the title root alongside the content", async () => {
+    const title = document.createElement("h1");
+    title.textContent = "The Title";
+    const root = makeRoot("<p>intro text</p>");
+    const client = async (texts) => texts.map((text) => `[IT]${text}`);
+    const stats = await translateArticle({ roots: [title, root], targetLang: "IT", client });
+    expect(stats.segments).toBe(2);
+    expect(title.textContent).toBe("[IT]The Title");
+    expect(root.querySelector("p").textContent).toBe("[IT]intro text");
+  });
+
   it("splits work into multiple requests when chunks are small", async () => {
     const root = makeRoot(`<p>${"a".repeat(30)}</p><p>${"b".repeat(30)}</p><p>${"c".repeat(30)}</p>`);
     const client = vi.fn(async (texts) => texts.map((text) => text.toUpperCase()));
