@@ -61,6 +61,14 @@ describe("mountReader", () => {
     await handle.close();
   });
 
+  it("exposes a programmatic translate trigger for remembered articles", async () => {
+    const onTranslate = vi.fn(async () => {});
+    const handle = mountReader(document, article, { t, onTranslate });
+    await handle.translate("DE");
+    expect(onTranslate).toHaveBeenCalledWith("DE", expect.anything());
+    await handle.close();
+  });
+
   it("animates in and out when the Web Animations API is available", async () => {
     const animate = vi.fn(() => ({ finished: Promise.resolve() }));
     const originalAnimate = Element.prototype.animate;

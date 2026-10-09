@@ -92,6 +92,7 @@ export function mountReader(doc, article, options = {}) {
     el: host,
     getArticleRoot: () => contentEl,
     getTranslatableRoots: () => [titleEl, contentEl],
+    translate: (targetLang) => runTranslation(targetLang),
     setCharCount: (count) => toolbar.setCharCount(count),
     setSettings(next = {}) {
       Object.assign(current, next);

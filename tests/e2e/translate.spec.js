@@ -34,13 +34,13 @@ test("translates in place keeping media, then serves the translation from cache"
   await expect(overlay.locator("h1")).toContainText("TR:");
   expect(servers.stats.translateCalls).toBeGreaterThan(0);
 
-  // Re-activating translation on the same page hits the cache: zero API calls.
+  // Reopening the reader re-applies the cached translation automatically:
+  // no click on Translate and zero API calls.
   const callsAfterFirst = servers.stats.translateCalls;
   await overlay.locator("[data-role='close']").click();
   await toggleReader(context);
   await expect(overlay).toHaveCount(1);
-  await expect(overlay.locator(".reader__content p").first()).not.toContainText("TR:");
-  await overlay.locator("[data-role='translate']").click();
-  await expect(overlay.locator(".reader__content p").first()).toContainText("TR:");
+  await expect(overlay.locator(".reader__content p").first()).toContainText("TR:", { timeout: 15_000 });
+  await expect(overlay.locator("h1")).toContainText("TR:");
   expect(servers.stats.translateCalls).toBe(callsAfterFirst);
 });

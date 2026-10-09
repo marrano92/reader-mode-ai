@@ -4,6 +4,7 @@ import { mountReader } from "./overlay.js";
 import { collectSegments } from "../translate/chunker.js";
 import { translateArticle } from "../translate/pipeline.js";
 import { getSettings, updateSettings } from "../shared/settings.js";
+import { getTranslatedArticle, rememberTranslatedArticle } from "../shared/articles.js";
 import { TranslationError } from "../translators/base.js";
 
 let reader = null;
@@ -23,11 +24,24 @@ async function openReader() {
       if (reader === instance) reader = null;
     },
     onSettingChange: (patch) => updateSettings(patch),
-    onTranslate: (targetLang, { roots, signal, onProgress }) =>
-      translateArticle({ roots, targetLang, signal, onProgress, client: translateTexts }),
+    onTranslate: async (targetLang, { roots, signal, onProgress }) => {
+      const stats = await translateArticle({ roots, targetLang, signal, onProgress, client: translateTexts });
+      await rememberTranslatedArticle(location.href, targetLang);
+      return stats;
+    },
   });
   reader = instance;
   reader.setCharCount(countTranslatableChars(reader.getTranslatableRoots()));
+  await maybeAutoTranslate(instance);
+}
+
+// Articles translated before re-open already translated: the segment cache
+// serves every string, so this costs zero DeepL calls.
+async function maybeAutoTranslate(instance) {
+  const remembered = await getTranslatedArticle(location.href);
+  if (!remembered || reader !== instance) return;
+  instance.setSettings({ targetLang: remembered.targetLang });
+  await instance.translate(remembered.targetLang);
 }
 
 function closeReader() {

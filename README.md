@@ -11,7 +11,8 @@ Piano e decisioni: [`docs/plans/2026-10-09-reader-mode-ai.md`](docs/plans/2026-1
   byline e data; temi bianco/seppia/grigio/scuro; font e corpo regolabili e persistenti.
 - **Traduzione AI**: sostituzione completa del testo nella lingua scelta (EN, IT, ES, FR,
   DE; default italiano) tramite DeepL API Free. Immagini, video e grafici restano al
-  loro posto e non vengono mai inviati al provider. Cache delle traduzioni in locale.
+  loro posto e non vengono mai inviati al provider. Cache delle traduzioni in locale:
+  gli articoli già tradotti si riaprono già tradotti, senza chiamate API.
 - **Comandi**: `Alt+R` o click sull'icona per attivare/disattivare; badge `R` sulle
   pagine con articolo riconosciuto.
 
