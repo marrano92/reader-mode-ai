@@ -40,17 +40,17 @@ describe("mountReader", () => {
     expect(content.querySelector("iframe")).not.toBeNull();
   });
 
-  it("locks page scroll while open and restores it on close", () => {
+  it("locks page scroll while open and restores it on close", async () => {
     const onClose = vi.fn();
     const handle = mountReader(document, article, { t, onClose });
     expect(document.documentElement.style.overflow).toBe("hidden");
-    handle.close();
+    await handle.close();
     expect(document.documentElement.style.overflow).toBe("");
     expect(onClose).toHaveBeenCalledOnce();
     expect(document.getElementById("reader-mode-ai-root")).toBeNull();
   });
 
-  it("applies typography settings through the stylesheet", () => {
+  it("applies typography settings through the stylesheet", async () => {
     const handle = mountReader(document, article, { t, settings: { theme: "dark", fontFamily: "sans", fontSize: 22 } });
     const styleOf = () => handle.el.shadowRoot.querySelector("style").textContent;
     expect(styleOf()).toContain("#1f2023");
@@ -58,6 +58,39 @@ describe("mountReader", () => {
     handle.setSettings({ theme: "sepia", fontFamily: "serif", fontSize: 18 });
     expect(styleOf()).toContain("#f6ecd9");
     expect(styleOf()).toContain("18px");
-    handle.close();
+    await handle.close();
+  });
+
+  it("animates in and out when the Web Animations API is available", async () => {
+    const animate = vi.fn(() => ({ finished: Promise.resolve() }));
+    const originalAnimate = Element.prototype.animate;
+    Element.prototype.animate = animate;
+    try {
+      const handle = mountReader(document, article, { t });
+      expect(animate).toHaveBeenCalled(); // staggered entrance
+      const callsAfterOpen = animate.mock.calls.length;
+      await handle.close();
+      expect(animate.mock.calls.length).toBe(callsAfterOpen + 1); // exit
+      expect(document.getElementById("reader-mode-ai-root")).toBeNull();
+    } finally {
+      Element.prototype.animate = originalAnimate;
+    }
+  });
+
+  it("skips the animation when the user prefers reduced motion", async () => {
+    const animate = vi.fn(() => ({ finished: Promise.resolve() }));
+    const originalAnimate = Element.prototype.animate;
+    const originalMatchMedia = window.matchMedia;
+    Element.prototype.animate = animate;
+    window.matchMedia = () => ({ matches: true });
+    try {
+      const handle = mountReader(document, article, { t });
+      expect(animate).not.toHaveBeenCalled();
+      await handle.close();
+      expect(animate).not.toHaveBeenCalled();
+    } finally {
+      Element.prototype.animate = originalAnimate;
+      window.matchMedia = originalMatchMedia;
+    }
   });
 });

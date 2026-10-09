@@ -60,6 +60,7 @@ export function mountReader(doc, article, options = {}) {
   doc.documentElement.style.overflow = "hidden";
 
   let abortController = null;
+  let closing = false;
 
   async function applySettings(patch) {
     const next = onSettingChange ? await onSettingChange(patch) : { ...current, ...patch };
@@ -97,14 +98,22 @@ export function mountReader(doc, article, options = {}) {
       style.textContent = readerCSS(current);
       toolbar.setSettings(current);
     },
-    close() {
+    async close() {
+      if (closing) return;
+      closing = true;
       abortController?.abort();
-      host.remove();
-      doc.documentElement.style.overflow = previousOverflow;
+      // Free the id and notify right away: the reader is inactive from now on,
+      // so a quick re-open cannot collide with the exit animation.
+      host.removeAttribute("id");
       onClose?.();
+      await animateOut(doc, page);
+      host.remove();
+      // A newer overlay may have locked scrolling meanwhile: leave it alone.
+      if (!doc.getElementById(HOST_ID)) doc.documentElement.style.overflow = previousOverflow;
     },
   };
   handle.setSettings(current);
+  animateIn(doc, { page, toolbar: toolbar.el, header, content: contentEl });
   return handle;
 }
 
@@ -127,4 +136,44 @@ function sanitizeContent(doc, html) {
 
 function defaultT(key) {
   return globalThis.chrome?.i18n?.getMessage?.(key) || key;
+}
+
+// Apple-like transition: the reader fades in over the page while its parts rise
+// into place with a staggered, soft ease-out; the exit is a quick fade and dip.
+const ENTER_EASING = "cubic-bezier(0.22, 1, 0.36, 1)";
+const EXIT_EASING = "cubic-bezier(0.4, 0, 1, 1)";
+
+function prefersReducedMotion(doc) {
+  return doc.defaultView?.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+}
+
+function animateIn(doc, parts) {
+  if (prefersReducedMotion(doc) || typeof parts.page.animate !== "function") return;
+  parts.page.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 280, easing: ENTER_EASING });
+  const stages = [
+    [parts.toolbar, 0],
+    [parts.header, 60],
+    [parts.content, 110],
+  ];
+  for (const [el, delay] of stages) {
+    el.animate(
+      [
+        { opacity: 0, transform: "translateY(16px) scale(0.985)" },
+        { opacity: 1, transform: "translateY(0) scale(1)" },
+      ],
+      { duration: 380, delay, easing: ENTER_EASING, fill: "backwards" },
+    );
+  }
+}
+
+async function animateOut(doc, page) {
+  if (prefersReducedMotion(doc) || typeof page.animate !== "function") return;
+  const animation = page.animate(
+    [
+      { opacity: 1, transform: "scale(1) translateY(0)" },
+      { opacity: 0, transform: "scale(0.98) translateY(8px)" },
+    ],
+    { duration: 220, easing: EXIT_EASING, fill: "forwards" },
+  );
+  await animation.finished?.catch(() => {});
 }

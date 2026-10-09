@@ -16,15 +16,17 @@ async function openReader() {
     return;
   }
   const settings = await getSettings();
-  reader = mountReader(document, article, {
+  const instance = mountReader(document, article, {
     settings,
     onClose: () => {
-      reader = null;
+      // Ignore stale exits: a quick re-open may have created a newer reader.
+      if (reader === instance) reader = null;
     },
     onSettingChange: (patch) => updateSettings(patch),
     onTranslate: (targetLang, { roots, signal, onProgress }) =>
       translateArticle({ roots, targetLang, signal, onProgress, client: translateTexts }),
   });
+  reader = instance;
   reader.setCharCount(countTranslatableChars(reader.getTranslatableRoots()));
 }
 
