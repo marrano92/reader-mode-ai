@@ -1,6 +1,6 @@
 ---
 title: "Issue + Piano — Estensione Chrome Reader Mode (stile Safari) con traduzione AI"
-status: "ready"
+status: "done"
 owner: "andrea.marrano"
 last_updated: "2026-10-09"
 type: "plan"
@@ -116,7 +116,7 @@ reader-mode-ai/
 
 ## Fette
 
-- [ ] **Fetta 1 — Scaffold e tooling**
+- [x] **Fetta 1 — Scaffold e tooling**
   - File: `package.json`, `build.mjs` (esbuild → `dist/`), `src/manifest.json`,
     `src/background/service-worker.js` (echo messaggi), `src/content/content.js` (minimale),
     `.gitignore`, `README.md`.
@@ -126,7 +126,7 @@ reader-mode-ai/
     senza errori nella chrome://extensions; `npx vitest run tests/unit/manifest.test.js` verde.
   - Comando: `npx vitest run tests/unit/manifest.test.js`
 
-- [ ] **Fetta 2 — Estrazione articolo**
+- [x] **Fetta 2 — Estrazione articolo**
   - File: `src/content/extract.js`, `src/vendor/readability.js` + `NOTICE`,
     `tests/fixtures/article-clean.html`, `article-noisy.html`, `article-media.html`,
     `listing.html`.
@@ -140,7 +140,7 @@ reader-mode-ai/
     malformato.
   - Comando: `npx vitest run tests/unit/extract.test.js`
 
-- [ ] **Fetta 3 — Overlay reader stile Safari + toggle**
+- [x] **Fetta 3 — Overlay reader stile Safari + toggle**
   - File: `src/content/overlay.js`, `src/content/reader.css.js`, `src/content/content.js`
     (toggle da icona e shortcut, es. `Alt+R`), `src/manifest.json` (`commands`, `action`).
   - Test da scrivere: `tests/unit/overlay.test.js` (render in jsdom: header titolo/byline,
@@ -151,7 +151,7 @@ reader-mode-ai/
     disattivando si torna esattamente alla pagina di partenza (scroll incluso).
   - Comando: `npx vitest run tests/unit/overlay.test.js && npx playwright test tests/e2e/reader-toggle.spec.js`
 
-- [ ] **Fetta 4 — Impostazioni di lettura (tema, font, corpo)**
+- [x] **Fetta 4 — Impostazioni di lettura (tema, font, corpo)**
   - File: `src/content/toolbar-ui.js`, `src/content/reader.css.js` (temi: bianco, sepia,
     grigio, scuro; font serif/sans; corpo − / +), `src/shared/settings.js` (persistenza
     `chrome.storage`), `src/options/*` (shell).
@@ -162,7 +162,7 @@ reader-mode-ai/
     la toolbar non rompe il layout del reader.
   - Comando: `npx vitest run tests/unit/settings.test.js tests/unit/toolbar-ui.test.js && npx playwright test tests/e2e/reader-settings.spec.js`
 
-- [ ] **Fetta 5 — Adapter traduttori + service worker + options page**
+- [x] **Fetta 5 — Adapter traduttori + service worker + options page**
   - File: `src/translate/chunker.js`, `src/translators/{base,deepl}.js`,
     `src/background/service-worker.js` (router), `src/shared/cache.js`, `src/options/*`
     (chiave DeepL, lingua default italiano, endpoint override per i test).
@@ -177,7 +177,7 @@ reader-mode-ai/
     `translateBlocks(blocks, targetLang)` (interfaccia provider-agnostica, oggi solo DeepL).
   - Comando: `npx vitest run tests/unit/chunker.test.js tests/unit/translators.test.js tests/unit/cache.test.js`
 
-- [ ] **Fetta 6 — Pipeline di traduzione nella UI reader**
+- [x] **Fetta 6 — Pipeline di traduzione nella UI reader**
   - File: `src/translate/pipeline.js`, `src/content/toolbar-ui.js` (selettore lingua tra le 5
     fisse, default italiano; pulsante "Traduci"; barra di progresso), `src/content/overlay.js`
     (sostituzione in loco del testo, stati di errore).
@@ -194,7 +194,7 @@ reader-mode-ai/
     seconda attivazione sulla stessa pagina = 0 chiamate allo stub (cache hit).
   - Comando: `npx vitest run tests/unit/pipeline.test.js && npx playwright test tests/e2e/translate.spec.js`
 
-- [ ] **Fetta 7 — Robustezza e UX**
+- [x] **Fetta 7 — Robustezza e UX**
   - File: `src/translators/base.js` (retry/backoff su 429/5xx), `src/translate/pipeline.js`
     (stati d'errore recuperabili, stima caratteri/costo prima di tradurre),
     `src/content/content.js` + `src/background/service-worker.js` (auto-detect leggibilità →
@@ -205,7 +205,7 @@ reader-mode-ai/
   - Criteri: nessun errore non gestito in console; traduzione annullabile; UI it/en completa.
   - Comando: `npx vitest run tests/unit/retry.test.js && npx playwright test tests/e2e/autodetect.spec.js`
 
-- [ ] **Fetta 8 — Rilascio**
+- [x] **Fetta 8 — Rilascio**
   - File: `docs/operations/release.md` (packaging, checklist Web Store), `docs/privacy.md`
     (cosa viene inviato al provider AI), `README.md`, script `npm run zip`, `_locales` complete.
   - Test: `tests/unit/permissions.test.js` (fallisce se il manifest dichiara permessi oltre la
@@ -217,4 +217,24 @@ reader-mode-ai/
 
 # Current handoff
 
-<!-- Il skill handoff riscrive questa sezione a ogni chiusura di fetta. -->
+Tutte le fette 1–8 completate il 2026-10-09, in sessione unica su richiesta
+dell'utente (deviazione dalla procedura "una fetta per sessione"). Commits in `main`:
+scaffold, extract, reader, settings, translate (adapter), translate (pipeline), ux,
+release.
+
+Verificato in questa sessione:
+
+- suite unitaria: **71/71 verdi** (`npm test`, 13 file);
+- suite e2e: **7/7 verdi** (`npm run test:e2e`, Chromium headless con estensione
+  caricata da `dist/` e stub DeepL locale);
+- `npm run build` → `dist/` completo; `npm run zip` → `reader-mode-ai-v0.1.0.zip`.
+
+Non verificato (da fare manualmente):
+
+- chiamate reali all'API DeepL: i test usano solo lo stub locale;
+- caricamento di `dist/` in Chrome e i comandi icona / `Alt+R` (Playwright non può
+  cliccare la toolbar del browser);
+- icone Web Store: ancora da produrre (vedi `docs/operations/release.md`).
+
+Prossimi passi: smoke test manuale con chiave DeepL Free (checklist in
+`docs/operations/release.md`) → icone → `review` → eventuale submit.
