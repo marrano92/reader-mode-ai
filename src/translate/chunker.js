@@ -55,9 +55,11 @@ export function replaceSegmentHtml(segment, html) {
   if (!parent) return;
   const template = parent.ownerDocument.createElement("template");
   template.innerHTML = html;
-  parent.insertBefore(template.content, first);
+  const fragment = template.content;
+  const newNodes = [...fragment.childNodes];
+  parent.insertBefore(fragment, first);
   for (const node of segment.nodes) node.remove();
-  segment.nodes = [...template.content.childNodes];
+  segment.nodes = newNodes;
 }
 
 function isBoundary(node) {

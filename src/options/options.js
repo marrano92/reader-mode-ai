@@ -1,6 +1,5 @@
 // Options page: user preferences and the translation provider credentials.
 import {
-  DEFAULT_DEEPL_ENDPOINT_PLACEHOLDER,
   getSecret,
   getSettings,
   setSecret,

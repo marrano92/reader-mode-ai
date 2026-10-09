@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "description": "Safari-style reader mode with DeepL AI translation.",
   "permissions": ["storage"],
+  "host_permissions": ["https://api-free.deepl.com/*", "https://api.deepl.com/*"],
   "options_ui": {
     "page": "options/options.html",
     "open_in_tab": true

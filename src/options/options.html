@@ -15,7 +15,10 @@
     </section>
     <section data-section="provider">
       <h2>Translation provider</h2>
-      <!-- Provider settings arrive in Fetta 5. -->
+      <label for="api-key">DeepL API key</label>
+      <input type="password" id="api-key" data-role="api-key" autocomplete="off" spellcheck="false">
+      <label for="endpoint-url">API endpoint override (optional, for tests or proxies)</label>
+      <input type="text" id="endpoint-url" data-role="endpoint-url" placeholder="https://api-free.deepl.com/v2/translate" spellcheck="false">
     </section>
     <p data-role="status" role="status"></p>
   </main>
