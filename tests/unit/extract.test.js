@@ -28,6 +28,12 @@ describe("extractArticle", () => {
     expect(article.title).toBe("Chipmakers rally as demand forecasts rise across the industry");
     expect(article.title).not.toContain("Chronicle");
     expect(article.byline).toContain("Emily Carter");
+    // Display ads, the cookie banner and the sidebar never reach the reader.
+    expect(article.content).not.toContain("Deploy in seconds");
+    expect(article.content).not.toContain("Studio sound");
+    expect(article.content).not.toContain("autumn reading list");
+    expect(article.content).not.toContain("We use cookies");
+    expect(article.content).not.toContain("Most read");
   });
 
   it("keeps the prose and strips nav, ads and footer", () => {

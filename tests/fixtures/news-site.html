@@ -17,7 +17,20 @@
   .masthead .tagline { color: var(--muted); font: 11px/1.4 -apple-system, Helvetica, sans-serif; letter-spacing: 3px; text-transform: uppercase; margin-top: 6px; }
   nav.sections { display: flex; gap: 26px; justify-content: center; padding: 11px 16px; border-top: 3px double var(--ink); border-bottom: 1px solid var(--line); font: 600 12px/1 -apple-system, Helvetica, sans-serif; letter-spacing: 1.5px; text-transform: uppercase; }
   nav.sections a:hover { color: var(--accent); }
-  .ad-banner { max-width: 1100px; margin: 20px auto; padding: 15px; border: 1px dashed #cfcfcf; background: var(--wash); color: var(--muted); text-align: center; font: 11px/1.6 -apple-system, Helvetica, sans-serif; letter-spacing: 2px; text-transform: uppercase; }
+  .ad-label { color: #a0a0a0; text-align: center; font: 10px/1.8 -apple-system, Helvetica, sans-serif; letter-spacing: 1.5px; text-transform: uppercase; }
+  .ad-leaderboard { max-width: 1100px; margin: 16px auto 24px; }
+  .ad-leaderboard .creative { display: flex; align-items: center; gap: 20px; padding: 20px 26px; border-radius: 8px; background: linear-gradient(90deg, #0e2a47, #1f5f96); color: #fff; }
+  .ad-leaderboard .logo { width: 48px; height: 48px; border-radius: 12px; background: #4fc3f7; box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
+  .ad-leaderboard h4 { margin: 0 0 4px; font: 700 19px/1.2 -apple-system, Helvetica, sans-serif; }
+  .ad-leaderboard p { margin: 0; font: 13px/1.4 -apple-system, Helvetica, sans-serif; opacity: 0.85; }
+  .ad-leaderboard .cta { margin-left: auto; padding: 11px 22px; border-radius: 8px; background: #ffd24d; color: #123; white-space: nowrap; font: 700 13px -apple-system, Helvetica, sans-serif; }
+  .ad-mpu { margin-bottom: 24px; }
+  .ad-mpu .creative { position: relative; overflow: hidden; height: 250px; border-radius: 8px; background: linear-gradient(160deg, #6d28d9, #c026d3); color: #fff; text-align: center; padding: 34px 22px; }
+  .ad-mpu .ring { position: absolute; top: -40px; right: -50px; width: 180px; height: 180px; border: 14px solid rgba(255,255,255,0.18); border-radius: 50%; }
+  .ad-mpu .ring2 { position: absolute; bottom: -30px; left: -36px; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.12); }
+  .ad-mpu h4 { margin: 0 0 10px; font: 700 21px/1.25 -apple-system, Helvetica, sans-serif; }
+  .ad-mpu p { margin: 0 0 18px; font: 13px/1.5 -apple-system, Helvetica, sans-serif; opacity: 0.9; }
+  .ad-mpu .cta { display: inline-block; padding: 10px 20px; border-radius: 20px; background: #fff; color: #6d28d9; font: 700 13px -apple-system, Helvetica, sans-serif; }
   .layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 44px; max-width: 1100px; margin: 26px auto 0; padding: 0 20px; }
   .kicker { color: var(--accent); font: 700 13px/1 -apple-system, Helvetica, sans-serif; letter-spacing: 2px; }
   h1.headline { font-size: 42px; line-height: 1.1; margin: 10px 0 14px; }
@@ -31,7 +44,13 @@
   figure img { width: 100%; border: 1px solid var(--line); display: block; }
   figcaption { color: var(--muted); font: 12.5px/1.5 -apple-system, Helvetica, sans-serif; margin-top: 7px; }
   .pullquote { margin: 28px 0; padding-left: 18px; border-left: 4px solid var(--accent); font-size: 25px; line-height: 1.35; font-style: italic; color: #333; }
-  .inline-ad { margin: 26px 0; padding: 20px; background: var(--wash); border: 1px solid var(--line); text-align: center; color: var(--muted); font: 11px/1.8 -apple-system, Helvetica, sans-serif; letter-spacing: 2px; text-transform: uppercase; }
+  .inline-ad { margin: 26px 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .inline-ad .ad-label { text-align: left; padding: 8px 14px 0; }
+  .inline-ad .creative { display: flex; align-items: center; gap: 18px; padding: 10px 18px 18px; background: linear-gradient(90deg, #f4efe6, #fbf7f0); }
+  .inline-ad .cover { width: 74px; height: 96px; border-radius: 4px; background: linear-gradient(150deg, #b45309, #f59e0b); box-shadow: 0 6px 16px rgba(0,0,0,0.18); }
+  .inline-ad h4 { margin: 0 0 6px; font: 700 17px/1.3 -apple-system, Helvetica, sans-serif; color: #4a3520; }
+  .inline-ad p { margin: 0 0 10px; font: 13px/1.5 -apple-system, Helvetica, sans-serif; color: #7a6547; }
+  .inline-ad .cta { color: #b45309; font: 700 13px -apple-system, Helvetica, sans-serif; }
   video { width: 100%; background: #000; display: block; }
   .tags { margin: 26px 0 0; }
   .tags a { display: inline-block; margin: 0 8px 8px 0; padding: 5px 12px; background: var(--wash); border: 1px solid var(--line); border-radius: 20px; font: 12px -apple-system, Helvetica, sans-serif; }
@@ -47,6 +66,13 @@
   .newsletter input { width: 100%; padding: 8px 10px; border: 1px solid var(--line); font: 13px sans-serif; margin-bottom: 8px; }
   .newsletter button { width: 100%; padding: 9px; background: var(--accent); color: #fff; border: 0; font: 600 13px -apple-system, Helvetica, sans-serif; cursor: pointer; }
   .adbox { text-align: center; color: #b5b5b5; font: 11px/2 -apple-system, Helvetica, sans-serif; letter-spacing: 2px; background: var(--wash); padding: 40px 10px; }
+  .cookie-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; display: flex; align-items: center; gap: 16px; padding: 14px 26px; background: #16181d; color: #d7d9de; font: 12.5px/1.5 -apple-system, Helvetica, sans-serif; box-shadow: 0 -6px 24px rgba(0,0,0,0.25); }
+  .cookie-bar .text { max-width: 720px; }
+  .cookie-bar a { color: #8ab4ff; }
+  .cookie-bar .actions { margin-left: auto; display: flex; gap: 10px; }
+  .cookie-bar button { padding: 9px 18px; border-radius: 6px; font: 600 12.5px -apple-system, Helvetica, sans-serif; cursor: pointer; }
+  .cookie-bar .ghost { background: transparent; color: #d7d9de; border: 1px solid #3a3f4a; }
+  .cookie-bar .primary { background: #2f6fed; color: #fff; border: 0; }
   footer.site { margin-top: 48px; padding: 30px 20px; background: var(--ink); color: #c9c9c9; font: 12px/1.7 -apple-system, Helvetica, sans-serif; }
   footer .cols { display: flex; gap: 70px; max-width: 1100px; margin: 0 auto 18px; }
   footer b { color: #fff; display: block; margin-bottom: 6px; }
@@ -63,7 +89,14 @@
     <a href="/world">World</a><a href="/business">Business</a><a href="/technology">Technology</a>
     <a href="/science">Science</a><a href="/culture">Culture</a><a href="/opinion">Opinion</a><a href="/sport">Sport</a>
   </nav>
-  <div class="ad-banner">Advertisement — Subscribe to The Daily Chronicle and save 60% today</div>
+  <div class="ad-leaderboard">
+    <div class="ad-label">Ad · cloudnova.example</div>
+    <div class="creative">
+      <div class="logo"></div>
+      <div><h4>Deploy in seconds. Scale to millions.</h4><p>Cloud hosting for teams that ship — free tier, no credit card.</p></div>
+      <div class="cta">Start free</div>
+    </div>
+  </div>
 
   <div class="layout">
     <article>
@@ -83,7 +116,13 @@
         <p>The figures arrived alongside fresh capital spending plans, with two manufacturers confirming new plants in Europe and North America. The announcements were welcomed by policymakers, who have spent the past two years courting the industry with subsidies aimed at shortening supply chains.</p>
         <div class="pullquote">"The order books are the strongest we have seen in a decade, and the visibility now stretches well into next year."</div>
         <p>Not everyone was convinced the rally has legs. Some strategists warned that inventories remain elevated in consumer electronics and that a single soft holiday season could quickly reverse the optimism that carried the sector through the past three sessions of gains.</p>
-        <div class="inline-ad">Advertisement — Meridian Components, trusted supplier since 1950</div>
+        <div class="inline-ad ad-banner">
+          <div class="ad-label">Ad · meridian-books.example</div>
+          <div class="creative">
+            <div class="cover"></div>
+            <div><h4>The autumn reading list is here</h4><p>Two for one on all hardcovers this week only.</p><div class="cta">Browse the list →</div></div>
+          </div>
+        </div>
         <p>For workers in the industry, the recovery is already visible on the shop floor. Recruitment has resumed at several plants that froze hiring last winter, and training budgets have been restored, according to union representatives who met management earlier this week.</p>
         <video controls src="briefing.mp4"></video>
         <p>Watch the full briefing above, with the market desk's analysis of Wednesday's session and what the order numbers tell us about the year ahead. The full dataset and methodology are available in the Chronicle data appendix.</p>
@@ -108,7 +147,15 @@
         <p>Get the morning briefing in your inbox, every weekday at 7.</p>
         <input placeholder="Your email"><button>Sign up</button>
       </div>
-      <div class="box adbox">Advertisement<br>300 × 250</div>
+      <div class="ad-mpu">
+        <div class="ad-label">Ad · meridian-audio.example</div>
+        <div class="creative">
+          <div class="ring"></div><div class="ring2"></div>
+          <h4>Studio sound, anywhere</h4>
+          <p>Wireless over-ear headphones with 40 hours of battery life.</p>
+          <div class="cta">Shop now · −20%</div>
+        </div>
+      </div>
     </aside>
   </div>
 
@@ -120,5 +167,9 @@
     </div>
     <div class="legal">© 2026 The Daily Chronicle. All rights reserved.</div>
   </footer>
+  <div class="cookie-bar">
+    <div class="text">We use cookies and similar technologies to measure our audience and improve the site. Read our <a href="/cookie-policy">cookie policy</a>.</div>
+    <div class="actions"><button class="ghost">Manage preferences</button><button class="primary">Accept</button></div>
+  </div>
 </body>
 </html>
