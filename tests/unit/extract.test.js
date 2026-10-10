@@ -18,7 +18,16 @@ describe("extractArticle", () => {
     expect(article).not.toBeNull();
     expect(article.title).toContain("Clean Article");
     expect(article.byline).toContain("Jane Doe");
-    expect(article.date).toContain("2026-01-05");
+    expect(article.date).toContain("2026");
+    expect(article.date).not.toContain("T"); // no raw ISO timestamps
+  });
+
+  it("keeps the article heading free of the site name", () => {
+    const article = extractArticle(loadFixture("news-site.html"));
+    expect(article).not.toBeNull();
+    expect(article.title).toBe("Chipmakers rally as demand forecasts rise across the industry");
+    expect(article.title).not.toContain("Chronicle");
+    expect(article.byline).toContain("Emily Carter");
   });
 
   it("keeps the prose and strips nav, ads and footer", () => {

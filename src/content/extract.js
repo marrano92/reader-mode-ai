@@ -81,11 +81,31 @@ function pickContainer(body) {
 // Fills missing metadata from the document (byline, date, title).
 function normalize(article, doc) {
   return {
-    title: clean(article.title) || firstText(doc, "h1") || clean(doc.title),
+    title: pickTitle(article.title, pickHeading(doc), doc),
     byline: clean(article.byline) || metaContent(doc, 'meta[name="author"]') || firstText(doc, '[rel="author"], .byline'),
-    date: clean(article.date) || metaContent(doc, 'meta[property="article:published_time"]') || firstText(doc, "time"),
+    date: formatDate(clean(article.date) || metaContent(doc, 'meta[property="article:published_time"]') || firstText(doc, "time")),
     content: article.content,
   };
+}
+
+// Prefers the article heading: extracted titles often drag the site name along.
+function pickTitle(extracted, heading, doc) {
+  const title = clean(extracted) || heading || clean(doc.title);
+  if (heading && title && title.startsWith(heading)) return heading;
+  return title;
+}
+
+// The site logo can be an h1 too: prefer the heading inside the article.
+function pickHeading(doc) {
+  return firstText(doc, "article h1, [role='main'] h1, .headline") || firstText(doc, "h1");
+}
+
+// Human-readable dates: ISO timestamps read poorly in a reading view.
+function formatDate(value) {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
 }
 
 function metaContent(doc, selector) {

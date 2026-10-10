@@ -21,7 +21,7 @@ const context = await chromium.launchPersistentContext(userDataDir, {
 
 try {
   const page = await context.newPage();
-  await page.goto(`${servers.baseUrl}/article-media.html`);
+  await page.goto(`${servers.baseUrl}/news-site.html`);
   mkdirSync(assetsDir, { recursive: true });
 
   // "Before" shot: the original page, noise included.
