@@ -1,7 +1,7 @@
 ---
 title: "Pubblicazione open source e diffusione di Reader Mode AI"
 status: "draft"
-owner: "andrea.marrano"
+owner: "marrano92"
 last_updated: "2026-10-09"
 type: "analysis"
 tags: ["pubblicazione", "open-source", "chrome-web-store", "diffusione"]

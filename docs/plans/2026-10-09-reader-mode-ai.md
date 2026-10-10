@@ -1,7 +1,7 @@
 ---
 title: "Issue + Piano — Estensione Chrome Reader Mode (stile Safari) con traduzione AI"
 status: "done"
-owner: "andrea.marrano"
+owner: "marrano92"
 last_updated: "2026-10-09"
 type: "plan"
 tags: ["chrome-extension", "mv3", "reader-mode", "ai-traduzione", "piano"]
