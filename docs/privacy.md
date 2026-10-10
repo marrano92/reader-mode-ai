@@ -27,5 +27,9 @@ o non cancella i dati del browser. Nessun dato è conservato altrove.
 
 ## Contatti
 
-Per domande su questa informativa: (da completare con l'indirizzo del titolare prima
-della pubblicazione su Chrome Web Store).
+Titolare del trattamento: `marrano92` (GitHub). Per richieste sulla privacy o per
+chiedere la rimozione dei dati locali: issue su
+<https://github.com/marrano92/reader-mode-ai/issues>.
+
+Nota per la pubblicazione su store: sostituire questo contatto con un indirizzo
+email dedicato prima della submit, se richiesto dalle policy dello store.

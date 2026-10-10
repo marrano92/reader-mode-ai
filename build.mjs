@@ -26,7 +26,7 @@ for (const file of ["options/options.js"]) {
 // Static assets first, so bundled entry points can overwrite their sources.
 await mkdir(outDir, { recursive: true });
 await copyFile(path.join(srcDir, "manifest.json"), path.join(outDir, "manifest.json"));
-for (const dir of ["_locales", "options"]) {
+for (const dir of ["_locales", "options", "icons"]) {
   const from = path.join(srcDir, dir);
   if (existsSync(from)) {
     await cp(from, path.join(outDir, dir), { recursive: true });

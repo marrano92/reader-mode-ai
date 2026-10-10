@@ -38,6 +38,16 @@ describe("manifest", () => {
     expect(manifest.commands?.["toggle-reader"]?.suggested_key?.default).toBe("Alt+R");
     expect(manifest.commands["toggle-reader"].description).toBeTruthy();
   });
+
+  it("ships the full icon set and wires it to the action", () => {
+    expect(Object.keys(manifest.icons ?? {}).sort()).toEqual(["128", "16", "32", "48"]);
+    for (const [size, iconPath] of Object.entries(manifest.icons)) {
+      expect(existsSync(path.join(root, "src", iconPath)), `missing src/${iconPath}`).toBe(true);
+      if (manifest.action.default_icon[size]) {
+        expect(manifest.action.default_icon[size]).toBe(iconPath);
+      }
+    }
+  });
 });
 
 describe("build", () => {
@@ -59,6 +69,9 @@ describe("build", () => {
     }
     for (const entry of entryPoints) {
       expect(existsSync(path.join(out, entry)), `missing dist/${entry}`).toBe(true);
+    }
+    for (const iconPath of Object.values(manifest.icons ?? {})) {
+      expect(existsSync(path.join(out, iconPath)), `missing dist/${iconPath}`).toBe(true);
     }
   });
 
