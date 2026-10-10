@@ -1,6 +1,7 @@
 {
   "name": "reader-mode-ai",
   "version": "0.1.0",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "description": "Chrome MV3 reader mode (Safari-style) with DeepL AI translation.",
@@ -9,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "zip": "node scripts/zip.mjs"
+    "zip": "node scripts/zip.mjs",
+    "screenshots": "node scripts/screenshots.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.0",

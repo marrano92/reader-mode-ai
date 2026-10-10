@@ -1,52 +1,61 @@
 # Reader Mode AI
 
-Estensione Chrome (Manifest V3) che aggiunge una modalità lettura visivamente ispirata a
-Safari Reader e la traduzione del testo tramite DeepL API Free.
+Chrome extension (Manifest V3) that adds an elegant, Safari-inspired reader mode and
+translates article text in place with the DeepL API.
 
-Piano e decisioni: [`docs/plans/2026-10-09-reader-mode-ai.md`](docs/plans/2026-10-09-reader-mode-ai.md).
+**Also available in Italian: [README.it.md](README.it.md)**
 
-## Funzionalità
-
-- **Modalità lettura stile Safari**: colonna centrata ~36em, serif, header con titolo,
-  byline e data; temi bianco/seppia/grigio/scuro; font e corpo regolabili e persistenti.
-- **Traduzione AI**: sostituzione completa del testo nella lingua scelta (EN, IT, ES, FR,
-  DE; default italiano) tramite DeepL API Free. Immagini, video e grafici restano al
-  loro posto e non vengono mai inviati al provider. Cache delle traduzioni in locale:
-  gli articoli già tradotti si riaprono già tradotti, senza chiamate API.
-- **Comandi**: `Alt+R` o click sull'icona per attivare/disattivare; badge `R` sulle
-  pagine con articolo riconosciuto.
-
-## Comandi sviluppo
-
-| Comando | Cosa fa |
+| Reader — sepia theme | Reader — dark theme |
 |---|---|
-| `npm install` | installa i dev dependencies |
-| `npm run build` | bundle in `dist/` (esbuild) |
-| `npm test` | test unitari (Vitest) |
-| `npm run test:e2e` | test end-to-end (Playwright; `npx playwright install chromium` la prima volta) |
-| `npm run zip` | pacchetto `reader-mode-ai-v<version>.zip` per lo store |
+| ![Reader mode, sepia](docs/assets/reader-sepia.png) | ![Reader mode, dark](docs/assets/reader-dark.png) |
 
-## Provare su Chrome
+## Features
 
-1. `npm run build`
-2. `chrome://extensions` → modalità sviluppatore → "Carica estensione non
-   pacchettizzata" → scegli la cartella `dist/`
-3. Click sull'icona "Opzioni" dell'estensione → inserisci la chiave **DeepL API Free**
-   (gratuita su <https://www.deepl.com/pro-api>) → lingua di default
-4. Apri un articolo qualsiasi e premi `Alt+R`
+- **Safari-style reading mode**: centered ~36em column, serif typography, title/byline/date
+  header; white, sepia, gray and dark themes; adjustable font family and size, persisted.
+- **AI translation**: full in-place text replacement into EN, IT, ES, FR or DE via the
+  **DeepL API Free** tier (bring your own free key). Images, video and charts keep their
+  position and are **never sent** to the provider. Inline markup is preserved.
+- **Smart caching**: translated strings and articles are cached locally — reopening a
+  translated article shows it translated instantly, with **zero API calls**.
+- **Fast access**: `Alt+R` or the toolbar button; an `R` badge marks pages with a
+  recognized article. Localized UI (en/it), `prefers-reduced-motion` respected.
 
-## Struttura
+## Quick start
 
-- `src/manifest.json` — manifest MV3, sorgente di verità per entrypoint e permessi
-- `src/background/` — service worker (traduzione + cache, badge, comandi)
-- `src/content/` — estrazione articolo, overlay reader, toolbar
-- `src/translate/` — pipeline e chunker (media esclusi dalla traduzione)
-- `src/translators/` — adapter DeepL (interfaccia provider-agnostica)
-- `src/options/` — pagina impostazioni
-- `src/_locales/` — UI it/en
-- `tests/unit/`, `tests/e2e/` — Vitest e Playwright (stub DeepL locale)
-- `docs/privacy.md`, `docs/operations/release.md` — privacy e runbook di rilascio
+1. `npm install && npm run build`
+2. `chrome://extensions` → Developer mode → "Load unpacked" → select `dist/`
+3. Extension icon → **Options** → paste your [DeepL API free key](https://www.deepl.com/pro-api)
+4. Open any article and press `Alt+R`
 
-## Licenze
+## Development
 
-L'estrazione usa `@mozilla/readability` (MPL-2.0): vedi `src/vendor/NOTICE`.
+| Command | Purpose |
+|---|---|
+| `npm run build` | bundle into `dist/` (esbuild) |
+| `npm test` | unit tests (Vitest) |
+| `npm run test:e2e` | end-to-end tests (Playwright, stub DeepL server, no real API calls) |
+| `npm run screenshots` | regenerate `docs/assets/` screenshots |
+| `npm run zip` | store-ready `reader-mode-ai-v<version>.zip` |
+
+## How it works
+
+- Article extraction: [Mozilla Readability](https://github.com/mozilla/readability)
+  (MPL-2.0, see `src/vendor/NOTICE`) with a heuristic fallback.
+- Translation pipeline: text runs are collected around media nodes, chunked, sent to DeepL
+  with `tag_handling=html`, and swapped in place — media nodes are never touched.
+- Caching: FNV-1a keyed string cache + article→language memory in `chrome.storage.local`.
+- One service-worker request per chunk: MV3 worker termination cannot break a translation.
+
+## Privacy
+
+No analytics, no own servers. Article text is sent to DeepL **only** when the user presses
+Translate. API key and cache stay in `chrome.storage.local`. See [docs/privacy.md](docs/privacy.md).
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Issues and PRs are welcome.
+
+## License
+
+[MIT](LICENSE). Translation extraction uses `@mozilla/readability` (MPL-2.0).
