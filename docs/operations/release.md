@@ -27,20 +27,20 @@ npm run zip       # reader-mode-ai-v<version>.zip pronto per lo store
 
 ## Testi per lo store (pronti all'uso)
 
-**Name (45 max):** `Reader Mode AI — Read & Translate`
+**Name (dal pacchetto):** `Reader Mode AI`
 
-**Summary (132 max, EN):** `Elegant Safari-inspired reader mode with one-click DeepL
+**Summary (132 max, EN):** `Elegant, distraction-free reader mode with one-click DeepL
 translation. Bring your own free API key.`
 
-**Summary (132 max, IT):** `Modalità lettura elegante ispirata a Safari con traduzione
-DeepL con un click. Usa la tua chiave API gratuita.`
+**Summary (132 max, IT):** `Modalità lettura elegante senza distrazioni con traduzione
+DeepL in un click. Usa la tua chiave API gratuita.`
 
 **Detailed description (EN):**
 
 > Turn any article into a beautiful, distraction-free reading experience — and read it
 > in your language.
 >
-> • Safari-inspired reader mode: centered column, serif typography, title, byline and date.
+> • Elegant reader mode: centered column, serif typography, title, byline and date.
 > • Themes: white, sepia, gray and dark; adjustable font family and size, remembered.
 > • One-click translation into English, Italian, Spanish, French and German, powered by
 >   the DeepL API (free tier, bring your own key — takes one minute to get).
@@ -57,8 +57,7 @@ DeepL con un click. Usa la tua chiave API gratuita.`
 > Trasforma ogni articolo in una esperienza di lettura elegante e senza distrazioni —
 > e leggilo nella tua lingua.
 >
-> • Modalità lettura ispirata a Safari: colonna centrata, tipografia serif, titolo,
->   autore e data.
+> • Modalità lettura elegante: colonna centrata, tipografia serif, titolo, autore e data.
 > • Temi bianco, seppia, grigio e scuro; font e corpo regolabili e memorizzati.
 > • Traduzione con un click in inglese, italiano, spagnolo, francese e tedesco, via
 >   DeepL API (piano gratuito, con la tua chiave gratuita).

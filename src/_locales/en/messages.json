@@ -1,6 +1,6 @@
 {
   "extName": { "message": "Reader Mode AI" },
-  "extDescription": { "message": "Safari-style reader mode with DeepL AI translation." },
+  "extDescription": { "message": "Elegant reader mode with one-click DeepL translation." },
   "toggleReader": { "message": "Toggle reader mode" },
   "closeReader": { "message": "Close reader" },
   "translate": { "message": "Translate" },
