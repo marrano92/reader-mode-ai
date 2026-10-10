@@ -9,6 +9,7 @@ const fixturesDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "
 
 export async function startStubServer() {
   const stats = { translateCalls: 0, texts: 0 };
+  const sockets = new Set();
 
   const server = http.createServer(async (req, res) => {
     // The extension service worker calls this endpoint cross-origin.
@@ -55,12 +56,21 @@ export async function startStubServer() {
   });
 
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  // Keep-alive sockets from Chromium would make server.close() wait forever.
+  server.on("connection", (socket) => {
+    sockets.add(socket);
+    socket.on("close", () => sockets.delete(socket));
+  });
   const { port } = server.address();
   return {
     port,
     baseUrl: `http://127.0.0.1:${port}`,
     translateUrl: `http://127.0.0.1:${port}/v2/translate`,
     stats,
-    close: () => new Promise((resolve) => server.close(resolve)),
+    close: () =>
+      new Promise((resolve) => {
+        for (const socket of sockets) socket.destroy();
+        server.close(resolve);
+      }),
   };
 }
