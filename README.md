@@ -1,5 +1,7 @@
 # Reader Mode AI
 
+[![CI](https://github.com/marrano92/reader-mode-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/marrano92/reader-mode-ai/actions/workflows/ci.yml)
+
 Chrome extension (Manifest V3) that adds an elegant, Safari-inspired reader mode and
 translates article text in place with the DeepL API.
 

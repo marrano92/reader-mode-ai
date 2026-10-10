@@ -70,6 +70,57 @@ DeepL con un click. Usa la tua chiave API gratuita.`
 
 **Category:** Productivity · **Language:** English (listing IT opzionale).
 
+## Pubblicazione automatica via GitHub Actions
+
+La workflow `.github/workflows/release.yml` pubblica su Chrome Web Store quando viene
+spinto un tag `v*`: test completi → build → zip → upload → publish.
+
+### Setup una tantum
+
+1. **Google Cloud Console** (<https://console.cloud.google.com>): crea un progetto →
+   "API e servizi" → abilita **Chrome Web Store API** → "Credenziali" → crea un client
+   OAuth 2.0 tipo **App desktop** → nota `client_id` e `client_secret`.
+2. **Refresh token**: apri Google OAuth Playground
+   (<https://developers.google.com/oauthplayground>) → Settings (⚙) → usa i tuoi client
+   OAuth → campo "OAuth 2.0 scopes": `https://www.googleapis.com/auth/chromewebstore` →
+   Authorize con l'account developer → "Exchange authorization code for tokens" →
+   copia il **refresh token**.
+3. **Prima versione**: carica manualmente lo zip dal dashboard (una volta sola, serve a
+   creare l'item) e prendi l'**extension id** dall'URL del dashboard.
+4. **GitHub** → Settings → Secrets and variables → Actions → New repository secret:
+
+   | Secret | Valore |
+   |---|---|
+   | `CHROME_EXTENSION_ID` | extension id dal dashboard |
+   | `CHROME_CLIENT_ID` | client_id GCP |
+   | `CHROME_CLIENT_SECRET` | client_secret GCP |
+   | `CHROME_REFRESH_TOKEN` | refresh token OAuth |
+
+### Flusso di release
+
+```bash
+# 1. aggiorna CHANGELOG.md (sezione Unreleased -> nuova versione) e committa
+# 2. bump versione (aggiorna package.json, commit e tag v0.1.1)
+npm version patch    # o minor / major
+# 3. push del commit e del tag: la workflow pubblica da sola
+git push --follow-tags
+```
+
+La versione nel manifest viene iniettata da `package.json` al build: la fonte unica è
+`npm version`, niente versioni duplicate da sincronizzare.
+
+### Note e cautele
+
+- La versione deve essere **strettamente crescente** rispetto a quella pubblicata, altrimenti
+  lo store rifiuta l'upload.
+- Ogni publish va in revisione: di solito automatica, manuale se il diff è considerato
+  rischioso (es. nuovi permessi).
+- Per rilasci a solo gruppo di test: sostituire il passo `publish` con l'opzione
+  `--trusted-testers` del CLI.
+- Il passo upload/publish usa `chrome-webstore-upload-cli`: alla prima esecuzione
+  verificare nomi comandi/opzioni contro la documentazione corrente del pacchetto
+  (non testabile in locale senza credenziali reali).
+
 ## Verifica manuale pre-release (smoke)
 
 1. `npm run build`, poi `chrome://extensions` → "Carica estensione non pacchettizzata" → `dist/`.

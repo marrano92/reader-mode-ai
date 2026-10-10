@@ -75,9 +75,11 @@ describe("build", () => {
     }
   });
 
-  it("copies the manifest unchanged", () => {
+  it("copies the manifest with the package version", () => {
+    const pkg = JSON.parse(readFileSync(path.join(root, "package.json"), "utf8"));
     const built = JSON.parse(readFileSync(path.join(out, "manifest.json"), "utf8"));
-    expect(built).toEqual(manifest);
+    expect(built.version).toBe(pkg.version);
+    expect({ ...built, version: null }).toEqual({ ...manifest, version: null });
   });
 
   it("bundles the content script with its marker string", () => {

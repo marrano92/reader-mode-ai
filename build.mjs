@@ -2,7 +2,7 @@
 // then copies the manifest and any static resources into the output directory.
 // Usage: node build.mjs [outputDir]   (default: dist/)
 import { build } from "esbuild";
-import { copyFile, cp, mkdir, readFile } from "node:fs/promises";
+import { cp, mkdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -12,6 +12,9 @@ const srcDir = path.join(root, "src");
 const outDir = path.resolve(root, process.argv[2] ?? "dist");
 
 const manifest = JSON.parse(await readFile(path.join(srcDir, "manifest.json"), "utf8"));
+// Single source of truth for the version: package.json (bump with `npm version`).
+const pkg = JSON.parse(await readFile(path.join(root, "package.json"), "utf8"));
+manifest.version = pkg.version;
 
 // JS entry points from the manifest; each output path mirrors its manifest path.
 const entries = new Map();
@@ -25,7 +28,7 @@ for (const file of ["options/options.js"]) {
 
 // Static assets first, so bundled entry points can overwrite their sources.
 await mkdir(outDir, { recursive: true });
-await copyFile(path.join(srcDir, "manifest.json"), path.join(outDir, "manifest.json"));
+await writeFile(path.join(outDir, "manifest.json"), `${JSON.stringify(manifest, null, 2)}\n`);
 for (const dir of ["_locales", "options", "icons"]) {
   const from = path.join(srcDir, dir);
   if (existsSync(from)) {
